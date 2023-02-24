@@ -1,75 +1,98 @@
 function decodeUplink(input) {
-var data = {};
-var offset = 0;
+
+offset=0;
 
 if (input.fPort == 16){
-  data.ullage_cm = (input.bytes[4] << 8) + input.bytes[5];
+  let ullage = (input.bytes[4] << 8) + input.bytes[5];
   let temp = input.bytes[6];
   if (temp > 50){
     offset = 256;
     }
-  data.temperature_C = -(offset-temp);
-  data.src = input.bytes[7] >> 4;
-  data.srssi = input.bytes[7] & 0xF;
+  let temperature_C = -(offset-temp);
+  let src = input.bytes[7] >> 4;
+  let srssi = input.bytes[7] & 0xF;
+  
+  return {
+      data: {
+        ullage_cm: ullage,
+        temp_C: temperature_C,
+        src: src,
+        srssi: srssi,
+      }
+    };
   }
 
 if (input.fPort == 48){
-  data.ullage_cm = (input.bytes[14] << 8) + input.bytes[15];
+  let ullage = (input.bytes[14] << 8) + input.bytes[15];
   let temp=input.bytes[16];
   if (temp>50){
     offset=256;
     }
-  data.temperature_C = -(offset-temp);
-  data.firmware = input.bytes[4].toString() +"."+input.bytes[5].toString();
+  let temperature_C = -(offset-temp);
+  let firmware = input.bytes[4].toString() +"."+input.bytes[5].toString();
   let reasonBytes = input.bytes[6];
   let contactReason = reasonBytes & 0x3;
+  var contactReasonMsg = "";
   switch(contactReason){
     case 0:
-      data.contactReason = "Reset";
+      contactReasonMsg = "Reset";
       break;
     case 1:
-      data.contactReason = "Scheduled";
+      contactReasonMsg = "Scheduled";
       break;
     case 2:
-      data.contactReason = "Manual";
+      contactReasonMsg = "Manual";
       break;
     case 3:
-      data.contactReason = "Activation";
+      contactReasonMsg = "Activation";
       break;
   }
   let lastReset = (reasonBytes >> 2) & 0x7;
+  var lasetResetMsg = "";
     switch(lastReset){
     case 0:
-      data.lastResetReason = "Power on";
+      lasetResetMsg = "Power on";
       break;
     case 1:
-      data.lastResetReason = "Brown out";
+      lasetResetMsg = "Brown out";
       break;
     case 2:
-      data.lastResetReason = "External";
+      lasetResetMsg = "External";
       break;
     case 3:
-      data.lastResetReason = "Watchdog";
+      lasetResetMsg = "Watchdog";
       break;
     case 4:
-      data.lastResetReason = "M3 lockup";
+      lasetResetMsg = "M3 lockup";
       break;
     case 5:
-      data.lastResetReason = "M3 system request";
+      lasetResetMsg = "M3 system request";
       break;
     case 6:
-      data.lastResetReason = "EM4";
+      lasetResetMsg = "EM4";
       break;
     case 7:
-      data.lastResetReason = "Backup mode";
+      lasetResetMsg = "Backup mode";
       break;
    }
-  data.activeStatus = (reasonBytes >> 5) & 0x1;
-  data.battery_pct = input.bytes[10];
-  data.txPeriod_h = input.bytes[13];
-  data.sensorRSSI_dBm = -input.bytes[8];
+  let activeStatus = (reasonBytes >> 5) & 0x1;
+  let battery = input.bytes[10];
+  let txPeriod = input.bytes[13];
+  let sensorRSSI = -input.bytes[8];
+  
+  return {
+      data: {
+        ullage_cm: ullage,
+        temp_C: temperature_C,
+        firmware: firmware,
+        contactReason: contactReasonMsg,
+        lastReset: lasetResetMsg,
+        active: activeStatus,
+        bat_V: battery,
+        txPeriod_h: txPeriod,
+        sensorRSSI: sensorRSSI
+      }
+    };
   }
-return {
-data: data
-};
+
 }
