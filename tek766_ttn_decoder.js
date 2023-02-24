@@ -96,8 +96,7 @@ else if (input.fPort == 48){
         txPeriod_h: txPeriod,
         sensorRSSI_dBm: sensorRSSI,
         hw_id: hardware
-      }
+        }
     };
   }
-
 }
