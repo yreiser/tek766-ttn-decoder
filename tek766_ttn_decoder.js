@@ -1,6 +1,6 @@
 function decodeUplink(input) {
 
-offset=0;
+offset = 0;
 
 if (input.fPort == 16){
   let ullage = (input.bytes[4] << 8) + input.bytes[5];
@@ -22,13 +22,14 @@ if (input.fPort == 16){
     };
   }
 
-if (input.fPort == 48){
+else if (input.fPort == 48){
   let ullage = (input.bytes[14] << 8) + input.bytes[15];
   let temp=input.bytes[16];
   if (temp>50){
     offset=256;
     }
   let temperature_C = -(offset-temp);
+  let hardware = input.bytes[3];
   let firmware = input.bytes[4].toString() +"."+input.bytes[5].toString();
   let reasonBytes = input.bytes[6];
   let contactReason = reasonBytes & 0x3;
@@ -88,9 +89,10 @@ if (input.fPort == 48){
         contactReason: contactReasonMsg,
         lastReset: lasetResetMsg,
         active: activeStatus,
-        bat_V: battery,
+        bat_pct: battery,
         txPeriod_h: txPeriod,
-        sensorRSSI: sensorRSSI
+        sensorRSSI_dBm: sensorRSSI,
+        hw_id: hardware
       }
     };
   }
