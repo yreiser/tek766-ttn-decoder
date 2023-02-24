@@ -8,14 +8,14 @@ if (input.fPort == 16){
   if (temp > 50){
     offset = 256;
     }
-  let temperature_C = -(offset-temp);
+  let temperature = -(offset-temp);
   let src = input.bytes[7] >> 4;
   let srssi = input.bytes[7] & 0xF;
   
   return {
       data: {
         ullage_cm: ullage,
-        temp_C: temperature_C,
+        temp_C: temperature,
         src: src,
         srssi: srssi,
       }
@@ -28,7 +28,7 @@ else if (input.fPort == 48){
   if (temp>50){
     offset=256;
     }
-  let temperature_C = -(offset-temp);
+  let temperature = -(offset-temp);
   let hardware = input.bytes[3];
   let firmware = input.bytes[4].toString() +"."+input.bytes[5].toString();
   let reasonBytes = input.bytes[6];
@@ -84,7 +84,7 @@ else if (input.fPort == 48){
   return {
       data: {
         ullage_cm: ullage,
-        temp_C: temperature_C,
+        temp_C: temperature,
         firmware: firmware,
         contactReason: contactReasonMsg,
         lastReset: lasetResetMsg,
