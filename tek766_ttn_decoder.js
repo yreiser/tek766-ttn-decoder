@@ -3,7 +3,6 @@ function decodeUplink(input) {
 offset = 0;
 
 // --- measurement payload ---
-
 if (input.fPort == 16){ 
   let ullage = (input.bytes[4] << 8) + input.bytes[5];
   let temp = input.bytes[6];
