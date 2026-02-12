@@ -114,7 +114,7 @@ def main():
     if len(payload) == 3:
         print("\nNote: You skipped all parameters, so this payload only contains the header (no changes).")
     else:
-        print("\nSend this as a downlink on a FPort 42.")
+        print("\nSend this as a downlink on FPort 42.")
 
 
 if __name__ == "__main__":
